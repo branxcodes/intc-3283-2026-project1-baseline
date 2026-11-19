@@ -302,4 +302,13 @@ class AuthenticationFlowIT {
                 .andExpect(content().string(containsString("The page you requested does not exist.")))
                 .andExpect(content().string(containsString("/missing")));
     }
+
+    @Test
+    void googleSignInIsOffWithoutCredentials() throws Exception {
+        this.mvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(not(containsString("Sign in with Google"))));
+        this.mvc.perform(get("/oauth2/authorization/google"))
+                .andExpect(status().isNotFound());
+    }
 }

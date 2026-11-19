@@ -4,7 +4,9 @@ import edu.northwestu.project1p2.security.AppUserDetails;
 import java.util.List;
 import java.util.Map;
 import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +33,16 @@ public class LoginController {
             new Notice(ERROR, ERROR, "Invalid email or password.", false),
             new Notice("unverified", ERROR,
                     "Confirm your email address before signing in. Check your inbox for the link.", true),
+            new Notice("oauth", ERROR,
+                    "Google sign-in failed. Make sure your Google email address is verified, then try again.", false),
             new Notice("verified", SUCCESS, "Email confirmed. You can sign in now.", false));
+
+    /** Present only when Google sign-in is configured (see {@code GoogleSignInConfig}). */
+    private final ObjectProvider<ClientRegistrationRepository> clientRegistrations;
+
+    public LoginController(final ObjectProvider<ClientRegistrationRepository> clientRegistrations) {
+        this.clientRegistrations = clientRegistrations;
+    }
 
     @GetMapping
     public String login(@AuthenticationPrincipal final @Nullable AppUserDetails currentUser,
@@ -47,6 +58,7 @@ public class LoginController {
                     model.addAttribute(notice.kind(), notice.message());
                     model.addAttribute("showResend", notice.offerResend());
                 });
+        model.addAttribute("googleSignIn", this.clientRegistrations.getIfAvailable() != null);
         model.addAttribute("section", "login");
         return "login";
     }

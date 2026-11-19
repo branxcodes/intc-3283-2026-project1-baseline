@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
@@ -44,12 +45,16 @@ public class SecurityConfig {
     private static final String[] PUBLIC_PATHS = {
         HOME, LOGIN, LOGOUT, "/register", "/error",
         "/check-email", "/verify-email/**",
+        // Google sign-in: start (/oauth2/authorization/*) and the provider's redirect back.
+        "/oauth2/**", "/login/oauth2/**",
         "/css/**", "/js/**", "/images/**", "/favicon.ico",
     };
 
     @Bean
     public SecurityFilterChain browserSecurityFilterChain(
             final HttpSecurity http,
+            final OAuthLoginSuccessHandler oauthSuccessHandler,
+            final ObjectProvider<ClientRegistrationRepository> clientRegistrations,
             final ObjectProvider<RequestMappingHandlerMapping> handlerMapping) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
@@ -70,6 +75,14 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl(LOGOUT)
                         .logoutSuccessUrl(LOGOUT));
+        // "Sign in with Google", only when credentials are configured (see GoogleSignInConfig).
+        // The provider authenticates, then the success handler links it to a local user.
+        if (clientRegistrations.getIfAvailable() != null) {
+            http.oauth2Login(oauth -> oauth
+                    .loginPage(LOGIN)
+                    .successHandler(oauthSuccessHandler)
+                    .failureUrl(LOGIN + "?oauth"));
+        }
         return http.build();
     }
 

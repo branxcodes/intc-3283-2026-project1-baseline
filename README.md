@@ -142,7 +142,7 @@ when the app starts:
 Flyway records which migrations have already run (in the
 `flyway_schema_history` table) and only runs new ones.
 
-**To change the schema, add a new file**, such as `V3__add_display_name.sql`.
+**To change the schema, add a new file** with the next unused version, such as `V4__add_display_name.sql`.
 Never edit a migration that has already run: Flyway checks each file's
 checksum and refuses to start if an applied migration has changed.
 
@@ -320,6 +320,21 @@ Boot's Whitelabel page. With `app.show-stack-traces: true` the page shows the
 exception, message and full stack trace; turn it off in production, since it
 exposes internals.
 
+### Optional: Sign in with Google
+
+Google sign-in is **off by default**; you don't need it to run the app. To turn it
+on, create an OAuth client at <https://console.cloud.google.com/apis/credentials>
+with the redirect URI `http://localhost:8080/login/oauth2/code/google`, then:
+
+```sh
+GOOGLE_CLIENT_ID=... GOOGLE_CLIENT_SECRET=... ./mvnw spring-boot:run
+```
+
+When both are set, `security/GoogleSignInConfig.java` registers Google and the
+sign-in page shows a "Sign in with Google" button. `OAuthLoginSuccessHandler`
+links the Google account to a local user through the `oauth_logins` table.
+Never commit these credentials.
+
 ---
 
 ## Postgres connectivity
@@ -482,7 +497,7 @@ failure:
 2. **Checkstyle** enforces style and design rules; any warning fails the build.
 3. **Compile with NullAway** fails the build if a value that might be `null`
    is used as if it can't be. Mark nullable things with `@Nullable`.
-4. **All tests, plus JaCoCo:** at least **60%** of lines must be covered by tests.
+4. **All tests, plus JaCoCo:** at least **80%** of lines must be covered by tests.
 5. **Suppressions guard:** `checkstyle-suppressions.xml` must stay empty. Fix
    warnings rather than silencing them.
 
