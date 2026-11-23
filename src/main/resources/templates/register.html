@@ -15,6 +15,13 @@
             <p th:if="${#fields.hasErrors('username')}" id="username-error" class="field-error" th:errors="*{username}"></p>
         </div>
         <div class="field">
+            <label for="gamerTag">Gamer tag <span class="required" aria-hidden="true">*</span></label>
+            <input type="text" th:field="*{gamerTag}" autocomplete="off" required
+                   th:attr="aria-invalid=${#fields.hasErrors('gamerTag')}, aria-describedby=${#fields.hasErrors('gamerTag')} ? 'gamerTag-error' : 'gamerTag-hint'">
+            <p id="gamerTag-hint" class="field-hint">3-20 letters, numbers or underscores.</p>
+            <p th:if="${#fields.hasErrors('gamerTag')}" id="gamerTag-error" class="field-error" th:errors="*{gamerTag}"></p>
+        </div>
+        <div class="field">
             <label for="email">Email address <span class="required" aria-hidden="true">*</span></label>
             <input type="email" th:field="*{email}" autocomplete="email" required
                    th:attr="aria-invalid=${#fields.hasErrors('email')}, aria-describedby=${#fields.hasErrors('email')} ? 'email-error'">
