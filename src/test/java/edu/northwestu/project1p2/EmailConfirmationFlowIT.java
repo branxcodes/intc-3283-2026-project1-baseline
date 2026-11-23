@@ -65,6 +65,7 @@ class EmailConfirmationFlowIT {
     private void register(final String email) throws Exception {
         this.mvc.perform(post("/register").with(csrf())
                         .param("username", "Confirm Me")
+                        .param("gamerTag", "confirm_me")
                         .param("email", email)
                         .param("password", PASSWORD)
                         .param("confirmPassword", PASSWORD))

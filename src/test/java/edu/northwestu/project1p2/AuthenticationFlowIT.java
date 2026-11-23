@@ -68,6 +68,7 @@ class AuthenticationFlowIT {
     private void register(final String username, final String email) throws Exception {
         this.mvc.perform(post("/register").with(csrf())
                         .param("username", username)
+                        .param("gamerTag", "player_one")
                         .param("email", email)
                         .param("password", PASSWORD)
                         .param("confirmPassword", PASSWORD))
@@ -187,6 +188,7 @@ class AuthenticationFlowIT {
 
         this.mvc.perform(post("/register").with(csrf())
                         .param("username", "second")
+                        .param("gamerTag", "second_player")
                         .param("email", email)
                         .param("password", PASSWORD)
                         .param("confirmPassword", PASSWORD))
@@ -199,12 +201,14 @@ class AuthenticationFlowIT {
     void invalidRegistrationShowsErrorsAndDoesNotEchoPassword() throws Exception {
         this.mvc.perform(post("/register").with(csrf())
                         .param("username", "")
+                        .param("gamerTag", "no spaces!")
                         .param("email", "not-an-email")
                         .param("password", "short")
                         .param("confirmPassword", "different"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))
-                .andExpect(model().attributeHasFieldErrors("form", "username", "email", "password", "confirmPassword"))
+                .andExpect(model().attributeHasFieldErrors("form", "username", "gamerTag", "email", "password",
+                        "confirmPassword"))
                 .andExpect(content().string(not(containsString("value=\"short\""))));
     }
 
@@ -212,6 +216,7 @@ class AuthenticationFlowIT {
     void postWithoutCsrfTokenIsForbidden() throws Exception {
         this.mvc.perform(post("/register")
                         .param("username", "csrf")
+                        .param("gamerTag", "csrf_player")
                         .param("email", uniqueEmail("csrf"))
                         .param("password", PASSWORD)
                         .param("confirmPassword", PASSWORD))
