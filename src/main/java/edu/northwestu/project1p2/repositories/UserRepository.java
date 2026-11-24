@@ -14,8 +14,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     /** Derived query: Spring Data escapes LIKE wildcards in the arguments. */
-    List<User> findTop50ByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrderByUsernameAsc(
-            String username, String email);
+    List<User> findTop50ByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrGamerTagContainingIgnoreCaseOrderByUsernameAsc(
+            String username, String email, String gamerTag);
 
     List<User> findTop10ByOrderByCreatedAtDesc();
 }

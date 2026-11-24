@@ -18,14 +18,18 @@ public class UserDirectoryService {
         this.userRepository = userRepository;
     }
 
-    /** Users whose username or email contains {@code query} (case-insensitive); recent users when blank. */
+    /**
+     * Users whose username, gamer tag or email contains {@code query} (case-insensitive);
+     * recent users when blank.
+     */
     public List<UserSummary> search(final String query) {
         final String term = normalizeQuery(query);
         if (term.isEmpty()) {
             return this.recent();
         }
         return this.userRepository
-                .findTop50ByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrderByUsernameAsc(term, term)
+                .findTop50ByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrGamerTagContainingIgnoreCaseOrderByUsernameAsc(
+                        term, term, term)
                 .stream()
                 .map(UserSummary::from)
                 .toList();
