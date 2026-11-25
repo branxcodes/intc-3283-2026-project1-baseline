@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: pageHead('My profile')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: topNav(${section})}"></nav>
+
+<main class="container auth">
+    <h1>My profile</h1>
+
+    <div th:if="${saved}" class="alert alert-success" role="status">Profile saved.</div>
+
+    <form th:object="${form}" th:action="@{/profile}" method="post" class="card form" novalidate>
+        <div class="field">
+            <label for="gamerTag">Gamer tag <span class="required" aria-hidden="true">*</span></label>
+            <input type="text" th:field="*{gamerTag}" autocomplete="off" required
+                   th:attr="aria-invalid=${#fields.hasErrors('gamerTag')}, aria-describedby=${#fields.hasErrors('gamerTag')} ? 'gamerTag-error' : 'gamerTag-hint'">
+            <p id="gamerTag-hint" class="field-hint">3-20 letters, numbers or underscores.</p>
+            <p th:if="${#fields.hasErrors('gamerTag')}" id="gamerTag-error" class="field-error" th:errors="*{gamerTag}"></p>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Save</button>
+    </form>
+</main>
+
+<footer th:replace="~{fragments/layout :: pageFooter}"></footer>
+</body>
+</html>
