@@ -8,7 +8,8 @@ import org.springframework.data.relational.core.mapping.Table;
 /**
  * A row in {@code users}. Spring Data JDBC creates instances through the single
  * constructor (its parameter names match the columns) and sets the remaining
- * columns ({@code id}, {@code created_at}, {@code verified_at}) on the fields.
+ * columns ({@code id}, {@code created_at}, {@code verified_at}, {@code gamer_tag})
+ * on the fields.
  */
 @Table(name = "users")
 public class User {
@@ -27,6 +28,9 @@ public class User {
 
     /** {@code null} until the account's email address has been verified. */
     private @Nullable LocalDateTime verifiedAt;
+
+    /** Public handle shown in the player list; {@code null} until the player sets one. */
+    private @Nullable String gamerTag;
 
     public User(final String email, final String username, final String password) {
         this.email = email;
@@ -60,6 +64,10 @@ public class User {
         this.verifiedAt = verifiedAt;
     }
 
+    public void setGamerTag(final @Nullable String gamerTag) {
+        this.gamerTag = gamerTag;
+    }
+
     public @Nullable Long getId() {
         return this.id;
     }
@@ -82,5 +90,9 @@ public class User {
 
     public @Nullable LocalDateTime getVerifiedAt() {
         return this.verifiedAt;
+    }
+
+    public @Nullable String getGamerTag() {
+        return this.gamerTag;
     }
 }

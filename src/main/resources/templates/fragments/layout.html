@@ -35,6 +35,8 @@
             <a th:href="@{/}" class="nav-link" th:classappend="${section == 'dashboard'} ? 'active'"
                th:attr="aria-current=${section == 'dashboard'} ? 'page'">Dashboard</a>
             <a th:href="@{/} + '#find-users'" class="nav-link">Find users</a>
+            <a th:href="@{/profile}" class="nav-link" th:classappend="${section == 'profile'} ? 'active'"
+               th:attr="aria-current=${section == 'profile'} ? 'page'">My profile</a>
         </th:block>
 
         <div class="nav-right">
@@ -62,6 +64,8 @@
         <a th:href="@{/}" class="sidebar-link" th:classappend="${section == 'dashboard'} ? 'active'"
            th:attr="aria-current=${section == 'dashboard'} ? 'page'">Dashboard</a>
         <a th:href="@{/} + '#find-users'" class="sidebar-link">Find users</a>
+        <a th:href="@{/profile}" class="sidebar-link" th:classappend="${section == 'profile'} ? 'active'"
+           th:attr="aria-current=${section == 'profile'} ? 'page'">My profile</a>
     </nav>
 </aside>
 

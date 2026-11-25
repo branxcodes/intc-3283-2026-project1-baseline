@@ -31,6 +31,7 @@ public class RegistrationService {
             return Result.EMAIL_TAKEN;
         }
         final User user = new User(email, form.getUsername().trim(), this.passwordEncoder.encode(form.getPassword()));
+        user.setGamerTag(form.getGamerTag());
         return this.save(user);
     }
 

@@ -26,9 +26,9 @@
             <section id="find-users" class="card" aria-labelledby="find-users-heading">
                 <h2 id="find-users-heading">Find users</h2>
                 <form th:action="@{/}" method="get" class="search" role="search">
-                    <label for="q" class="visually-hidden">Search by username or email</label>
+                    <label for="q" class="visually-hidden">Search by username, gamer tag or email</label>
                     <input type="search" id="q" name="q" th:value="${query}"
-                           placeholder="Search by username or email" maxlength="100">
+                           placeholder="Search by username, gamer tag or email" maxlength="100">
                     <button type="submit" class="btn btn-primary">Search</button>
                     <a th:if="${!#strings.isEmpty(query)}" th:href="@{/}" class="btn btn-secondary">Clear</a>
                 </form>
@@ -43,6 +43,7 @@
                         <thead>
                         <tr>
                             <th scope="col">Username</th>
+                            <th scope="col">Gamer tag</th>
                             <th scope="col">Email</th>
                             <th scope="col">Status</th>
                             <th scope="col">Joined</th>
@@ -50,13 +51,14 @@
                         </thead>
                         <tbody>
                         <tr th:if="${#lists.isEmpty(users)}">
-                            <td colspan="4" class="empty"
+                            <td colspan="5" class="empty"
                                 th:text="${#strings.isEmpty(query)} ? 'No users yet.' : 'No users matching &quot;' + ${query} + '&quot;.'">
                                 No users yet.
                             </td>
                         </tr>
                         <tr th:each="user : ${users}">
                             <td th:text="${user.username}">username</td>
+                            <td th:text="${user.gamerTag} ?: '—'">gamer tag</td>
                             <td th:text="${user.email}">email</td>
                             <td>
                                 <span th:if="${user.verified}" class="badge badge-success">Verified</span>

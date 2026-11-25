@@ -2,6 +2,7 @@ package edu.northwestu.project1p2.forms;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.jspecify.annotations.Nullable;
 
@@ -12,9 +13,18 @@ import org.jspecify.annotations.Nullable;
  */
 public class RegistrationForm {
 
+    /** 3-20 letters, digits or underscores. Shared with the profile form; V4 enforces the same rule. */
+    public static final String GAMER_TAG_PATTERN = "^[A-Za-z0-9_]{3,20}$";
+
+    public static final String GAMER_TAG_MESSAGE = "Gamer tag must be 3-20 letters, numbers or underscores";
+
     @NotBlank(message = "Username is required")
     @Size(max = 50, message = "Username must be 50 characters or fewer")
     private String username = "";
+
+    @NotBlank(message = "Gamer tag is required")
+    @Pattern(regexp = GAMER_TAG_PATTERN, message = GAMER_TAG_MESSAGE)
+    private String gamerTag = "";
 
     @NotBlank(message = "Email is required")
     @Email(message = "Enter a valid email address")
@@ -35,6 +45,15 @@ public class RegistrationForm {
 
     public void setUsername(final String username) {
         this.username = username;
+    }
+
+    public String getGamerTag() {
+        return this.gamerTag;
+    }
+
+    /** Trimmed on bind, like the email address. */
+    public void setGamerTag(final @Nullable String gamerTag) {
+        this.gamerTag = gamerTag == null ? "" : gamerTag.trim();
     }
 
     public String getEmail() {
